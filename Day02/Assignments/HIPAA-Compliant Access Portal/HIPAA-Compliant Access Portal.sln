@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37314.3 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HIPAA-Compliant Access Portal", "HIPAA-Compliant Access Portal\HIPAA-Compliant Access Portal.csproj", "{A60B2A5A-11E0-4F19-A2B3-718189AB13D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A60B2A5A-11E0-4F19-A2B3-718189AB13D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A60B2A5A-11E0-4F19-A2B3-718189AB13D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A60B2A5A-11E0-4F19-A2B3-718189AB13D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A60B2A5A-11E0-4F19-A2B3-718189AB13D8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BBF767AB-ABC3-4A5F-956C-E55E0923BE7D}
+	EndGlobalSection
+EndGlobal
