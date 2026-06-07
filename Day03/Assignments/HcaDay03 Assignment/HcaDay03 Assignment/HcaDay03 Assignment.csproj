@@ -6,6 +6,7 @@
     <RootNamespace>HcaDay03_Assignment</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <StartupObject>HcaDay3_Assignment.Task4_BillingModule</StartupObject>
   </PropertyGroup>
 
 </Project>

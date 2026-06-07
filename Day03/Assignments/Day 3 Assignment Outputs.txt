@@ -1,0 +1,226 @@
+1. Patient Registration 
+
+Output:
+
+--------------------------------------------------
+       HOSPITAL PATIENT REGISTRATION SYSTEM
+--------------------------------------------------
+
+Enter Patient Name: Adithya
+Enter Patient age: 20
+Enter Gender (Male/Female/Other): Male
+Enter Phone Number: 1234567890
+Enter City: Hyd
+
+[Registration Complete]
+
+--------------------------------------------------
+            PATIENT REGISTRATION SLIP
+--------------------------------------------------
+Date: 07-06-2026
+
+Patient ID: PAT-2026-001
+Name:       Adithya
+Age:        20 years
+Gender:     Male
+Contact:    1234567890
+Location:   Hyd
+
+Instructions:
+Please proceed to the waiting area.
+--------------------------------------------------
+Created 1000 patient records.
+Memory Before GC: 611 KB
+Memory After GC: 462 KB
+--------------------------------------------------
+
+---------------------------------------------------------------
+
+2. Appointment Scheduling
+
+Output:
+--------------------------------------------------
+       APPOINTMENT BOOKING SYSTEM
+--------------------------------------------------
+Enter Patient Name: Adithya
+
+Select Department:
+1. General Medicine
+2. Dental
+3. Orthopedics
+Enter Choice: 1
+
+Select Doctor:
+1. Dr. A. Kumar
+2. Dr. B. Singh
+Enter Choice: 1
+
+Select Time Slot:
+1. 10:00 AM
+2. 11:00 AM
+3. 12:00 PM
+Enter Choice: 1
+
+[Booking Confirmed]
+
+--------------------------------------------------
+            APPOINTMENT TICKET
+--------------------------------------------------
+Patient:    Adithya
+Department: General Medicine
+Doctor:     Dr. A. Kumar
+Time:       10:00 AM
+Status:     Confirmed
+
+Please arrive 15 mins before your slot.
+--------------------------------------------------
+
+MEMORY MANAGEMENT CHECK
+--------------------------------------------------
+Memory Before Cleanup: 446 KB
+Memory After Cleanup: 446 KB
+Difference: 0 KB
+
+Note: Small objects may not show visible memory reduction.
+
+---------------------------------------------------------------
+
+3. Vital Signs
+
+Output:
+
+--------------------------------------------------
+           VITAL SIGNS MONITOR
+--------------------------------------------------
+Enter Patient Name:Adithya
+Enter Body Temperature (°C):37
+Enter Oxygen Level (%):80
+Enter Pulse Rate (BPM):90
+
+[Analyzing Data...]
+
+--------------------------------------------------
+       MEDICAL ASSESSMENT REPORT
+--------------------------------------------------
+Patient: Adithya
+
+Vitals Recorded:
+- Temp:   37 C
+- Oxygen: 80 %
+- Pulse:  90 BPM
+
+Status Assessment: CRITICAL
+(Reason: All vitals are within normal limits)
+Action: Continue routine monitoring.
+--------------------------------------------------
+
+MEMORY MANAGEMENT DEMONSTRATION
+--------------------------------------------------
+Memory Before Cleanup: 446 KB
+Memory After Cleanup:  446 KB
+Difference: 0 KB
+Unused objects are now eligible for memory reclamation.
+--------------------------------------------------
+---------------------------------------------------------------
+
+4. Billing Module
+
+Output:
+--------------------------------------------------
+       HOSPITAL BILLING CALCULATOR
+--------------------------------------------------
+Patient Name: Adithya
+Patient Age: 20
+
+Add Services:
+1. Consultation (500)
+2. Blood Test (200)
+3. X-Ray (1000)
+4. Done
+1
+[Added Consultation]
+
+Add Services:
+1. Consultation (500)
+2. Blood Test (200)
+3. X-Ray (1000)
+4. Done
+2
+[Added Blood Test]
+
+Add Services:
+1. Consultation (500)
+2. Blood Test (200)
+3. X-Ray (1000)
+4. Done
+3
+[Added X-Ray]
+
+Add Services:
+1. Consultation (500)
+2. Blood Test (200)
+3. X-Ray (1000)
+4. Done
+4
+
+[Calculating Bill...]
+--------------------------------------------------
+            FINAL BILL INVOICE
+--------------------------------------------------
+Patient: Adithya (Normal)
+
+Base Amount:     1700
+Discount:       -0
+Tax (5%):       +85.00
+
+--------------------------------------------------
+TOTAL PAYABLE:   1785.00
+--------------------------------------------------
+
+MEMORY MANAGEMENT CHECK
+--------------------------------------------------
+Memory Before Cleanup: 446 KB
+Memory After Cleanup: 446 KB
+Difference: 0 KB
+Note: Small objects may not show visible memory reduction.
+
+---------------------------------------------------------------
+
+5. Hospital Report
+
+Output:
+--------------------------------------------------
+       DAILY HOSPITAL ACTIVITY REPORT
+--------------------------------------------------
+Date: 07-06-2026
+
+Patient List:
+1. Arun - General - $500
+2. Nitya - Dental - $1200
+3. Kriti - General - $400
+4. Rohan - Ortho - $2500
+5. Karan - Dental - $800
+
+--------------------------------------------------
+SUMMARY STATISTICS
+--------------------------------------------------
+Total Patients Visited:  5
+Total Revenue:           $5400
+
+Traffic by Department:
+- General: 2
+- Dental: 2
+- Ortho: 1
+
+End of Report.
+--------------------------------------------------
+
+MEMORY MANAGEMENT DEMONSTRATION
+--------------------------------------------------
+Memory Before Allocation: 390 KB
+Memory After Allocation: 11570 KB
+Allocated Approx: 11180 KB
+Memory After Cleanup: 11571 KB
+Difference From Start: 11180 KB
+
+---------------------------------------------------------------
