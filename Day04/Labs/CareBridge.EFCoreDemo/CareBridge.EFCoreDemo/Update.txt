@@ -1,0 +1,42 @@
+using CareBridge.EFCoreDemo.Models.Generated;   // Generated Patient, Provider, Encounter classes
+
+// Create a DbContext object.
+// DbContext represents a session with the database.
+// EF Core uses this object to query and update data.
+using var db = new CareBridgeScaffoldContext();
+
+// ---------------------------
+// UPDATE A PATIENT
+// ---------------------------
+
+// Step 1: Load a patient from the database.
+// Find() searches using the primary key (PatientId).
+//
+// EF Core generates SQL similar to:
+// SELECT * FROM Patient WHERE PatientId = 1
+var patient = db.Patients.Find(1);
+
+// Always check whether a record was found.
+if (patient != null)
+{
+    // Step 2: Modify a property in memory.
+    // This is just a normal C# property assignment.
+    // EF Core is tracking this object and notices the change.
+    patient.City = "Bengaluru";
+
+    // Step 3: Save the changes.
+    // EF Core compares the current object with the original values
+    // it loaded from the database.
+    //
+    // EF Core generates SQL similar to:
+    // UPDATE Patient
+    // SET City = 'Bengaluru'
+    // WHERE PatientId = 1
+    db.SaveChanges();
+
+    Console.WriteLine($"Patient 1 city is now {patient.City}");
+}
+else
+{
+    Console.WriteLine("Patient not found.");
+}

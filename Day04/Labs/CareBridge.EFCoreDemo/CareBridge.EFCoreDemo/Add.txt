@@ -1,0 +1,18 @@
+using CareBridge.EFCoreDemo.Models.Generated;
+
+using var db = new CareBridgeScaffoldContext();
+
+var newPatient = new Patient
+{
+    Mrn = "MRN900001",
+    FullName = "Ananya Sharma",
+    DateOfBirth = new DateOnly(1990, 5, 14),
+    Gender = "F",
+    City = "Hyderabad",
+    IsActive = true
+};
+
+db.Patients.Add(newPatient);
+db.SaveChanges();
+
+Console.WriteLine($"Inserted patient with new Id = {newPatient.PatientId}");

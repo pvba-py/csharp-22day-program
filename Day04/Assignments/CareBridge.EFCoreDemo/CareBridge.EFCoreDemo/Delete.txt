@@ -1,0 +1,43 @@
+using CareBridge.EFCoreDemo.Models.Generated;   // Generated Patient, Provider, Encounter classes
+
+// Create a DbContext object.
+// DbContext represents a session with the database.
+// EF Core uses this object to query and modify data.
+using var db = new CareBridgeScaffoldContext();
+
+// ---------------------------
+// DELETE A PATIENT
+// ---------------------------
+
+// Step 1: Find the patient we inserted earlier.
+// We search using the unique MRN value.
+//
+// FirstOrDefault() returns:
+// - the first matching patient if found
+// - null if no matching patient exists
+//
+// EF Core generates SQL similar to:
+// SELECT * FROM Patient WHERE MRN = 'MRN900001'
+
+var toDelete = db.Patients.FirstOrDefault(p => p.Mrn == "MRN900001");
+
+// Step 2: Check whether the patient was found.
+if (toDelete != null)
+{
+    // Step 3: Mark the object for deletion.
+    // The row is NOT deleted yet.
+    db.Patients.Remove(toDelete);
+
+    // Step 4: SaveChanges() sends the DELETE command to SQL Server.
+    //
+    // EF Core generates SQL similar to:
+    // DELETE FROM Patient
+    // WHERE PatientId = ...
+    db.SaveChanges();
+
+    Console.WriteLine("Test patient deleted successfully.");
+}
+else
+{
+    Console.WriteLine("Patient not found.");
+}

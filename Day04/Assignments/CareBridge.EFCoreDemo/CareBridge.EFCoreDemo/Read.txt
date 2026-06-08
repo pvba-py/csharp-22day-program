@@ -1,0 +1,38 @@
+using CareBridge.EFCoreDemo.Models.Generated;   // Generated Patient, Provider, Encounter classes
+
+// Create a DbContext object.
+// DbContext represents a session with the database.
+// Through this object we can query and modify database tables.
+using var db = new CareBridgeScaffoldContext();
+
+// ---------------------------
+// READ ONE PATIENT
+// ---------------------------
+
+// Find() searches using the primary key (PatientId).
+// EF Core generates SQL similar to:
+// SELECT * FROM Patient WHERE PatientId = 1
+
+var p = db.Patients.Find(1);
+
+if (p != null)
+{
+    Console.WriteLine($"{p.PatientId}: {p.FullName} ({p.City})");
+}
+else
+{
+    Console.WriteLine("Patient not found.");
+}
+
+// ---------------------------
+// READ MULTIPLE PATIENTS
+// ---------------------------
+
+// Take(5) limits the result to the first 5 rows.
+// Similar SQL:
+// SELECT TOP 5 * FROM Patient
+
+foreach (var patient in db.Patients.Take(5))
+{
+    Console.WriteLine($"{patient.PatientId} - {patient.FullName}");
+}
