@@ -581,7 +581,7 @@ static void SplitQueryDemo()
           .Include(p => p.Encounters)
               .ThenInclude(e => e.Claims)
           .FirstOrDefault(p => p.Mrn == "MRN888888");
-
+    db.Add(patient);
     sw.Stop();
 
     if (patient == null)
@@ -599,7 +599,7 @@ static void SplitQueryDemo()
     Console.WriteLine($"Claims     : {claimCount}");
 
     Console.WriteLine($"\nElapsed Time: {sw.ElapsedMilliseconds} ms");
-
+ 
     Console.WriteLine("\nEXPECTED PROFILER RESULT:");
     Console.WriteLine("Multiple SQL statements (NOT one big join)");
 }
