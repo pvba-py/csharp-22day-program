@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Something Went Wrong</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .error-card {
+            background-color: white;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .heart {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #0a4d8c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #083a66;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="error-card">
+        <div class="heart">❤️</div>
+        <h1>We’re Taking Care of This</h1>
+
+        <p>
+            Something didn’t go as expected, but don’t worry.
+            Our system is designed to handle situations like this.
+        </p>
+
+        <p>
+            Please take a moment, and try again shortly.
+            If this issue continues, our support team is already on it.
+        </p>
+
+        <p>
+            Your care and safety are always our top priority.
+        </p>
+
+        <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+</html>

@@ -581,7 +581,6 @@ static void SplitQueryDemo()
           .Include(p => p.Encounters)
               .ThenInclude(e => e.Claims)
           .FirstOrDefault(p => p.Mrn == "MRN888888");
-    db.Add(patient);
     sw.Stop();
 
     if (patient == null)
