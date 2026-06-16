@@ -1,0 +1,129 @@
+Phase 4: Database Design 
+19 tables. Optimizations applied: ReleaseRequests merged into ReleasedSlots (release event + slot inventory in one row), EmergencyBuffers merged into SystemSettings (per-hospital keys). New: org.Hospitals, scheduling.SchedulingCycles, cycle rollover with CyclesWaited score boost and starvation flag.
+Final score formula:
+Score = PriorityWeight×50 + min(WaitingDays,30)×2 + ReadinessWeight×20
+      + DurationFit×15 + CyclesWaited×10
+Starvation flag: CyclesWaited >= 3 → highlighted on scheduler's weekly screen
+
+Deliverable 1: Entity List
+Table List
+#
+Table
+Temporal
+Notes
+1
+org.Hospitals
+No
+Global master for all facilities
+2
+auth.Roles
+No
+
+
+3
+auth.Users
+Yes
+HospitalId NULL = corporate user
+4
+clinical.Surgeons
+No
+Primary hospital
+5
+clinical.Patients
+Yes
+MRN unique per hospital
+6
+facility.OperatingRooms
+Yes
+
+
+7
+scheduling.RecurringBlockTemplates
+No
+
+
+8
+scheduling.BlockExceptions
+No
+
+
+9
+scheduling.SchedulingCycles
+No
+Weekly batch cycle per hospital
+10
+scheduling.BlockAllocations
+Yes
+
+
+11
+scheduling.ORRequests
+Yes
+CycleId, OriginalCycleId, CyclesWaited
+12
+scheduling.SurgicalCases
+Yes
+
+
+13
+scheduling.ReleasedSlots
+No
+Merged: release event + slot pool
+14
+scheduling.WaitlistRequests
+No
+Score snapshot at match
+15
+analytics.UtilizationRecords
+No
+Append-only facts
+16
+analytics.ForecastRecommendations
+No
+
+
+17
+config.SystemSettings
+No
+Global default + per-hospital override
+18
+audit.AuditLogs
+No
+Append-only, IP + UserAgent
+19
+audit.PhiAccessLogs
+No
+Append-only, IP + UserAgent
+
+
+Phase 5: Application Architecture
+
+	
+Project Strucutre:
+
+ORManagementSystem/
+│
+├── ORManagement.Api/
+│   ├── Controllers/
+│   ├── Middleware/
+│   └── Program.cs
+│
+├── ORManagement.Application/
+│   ├── Interfaces/
+│   │   ├── Services/
+│   │   └── Repositories/
+│   ├── Services/
+│   ├── Engines/
+│   └── DTOs/
+│
+├── ORManagement.Infrastructure/
+│   ├── Data/
+│   │   ├── ORManagementDbContext.cs
+│   │   └── Entities/
+│   ├── Repositories/
+│   └── Interceptors/
+│
+└── ORManagement.Tests/
+    ├── UnitTests/
+    └── IntegrationTests/
+
