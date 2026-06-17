@@ -1,0 +1,214 @@
+# Azure Deployment
+
+Azure Deployment is the process of hosting and running applications, APIs, databases, and services on Microsoft Azure. Deployment can be done manually through the Azure Portal or automatically using CI/CD pipelines. Azure supports Infrastructure as Code (IaC) through tools such as Azure Resource Manager (ARM) Templates, Bicep, and Terraform. Common deployment targets include Azure App Service, Azure Virtual Machines, Azure Kubernetes Service (AKS), Azure Functions, and Azure Container Instances.
+
+A typical deployment process starts with creating a Resource Group, followed by provisioning required resources such as App Services, databases, storage accounts, and networking components. Applications are then deployed using Visual Studio, Azure DevOps, GitHub Actions, Azure CLI, or PowerShell.
+
+Azure deployment slots allow multiple versions of an application to run simultaneously. For example, a staging slot can be tested before swapping it with the production slot, reducing downtime and deployment risks.
+
+---
+
+# Resource Group
+
+A Resource Group is a logical container used to organize and manage Azure resources. Every Azure resource must belong to a Resource Group. It helps simplify deployment, monitoring, security management, and resource lifecycle management.
+
+Resources within a Resource Group can include virtual machines, storage accounts, databases, web apps, virtual networks, and more. Resources can be deployed, updated, or deleted together as a single unit when required.
+
+Benefits of Resource Groups include centralized management, role-based access control (RBAC), cost tracking, resource organization, and simplified automation. A single application's resources are often placed in one Resource Group to ease management.
+
+Example:
+
+```text
+Resource Group: Hospital-RG
+
+├── App Service
+├── SQL Database
+├── Storage Account
+├── Virtual Network
+└── Application Insights
+```
+
+---
+
+# Azure Storage
+
+Azure Storage is Microsoft's cloud storage platform designed for durability, availability, scalability, and security. It supports structured, semi-structured, and unstructured data.
+
+Azure Storage Account acts as the top-level container for all storage services. Each storage account provides a unique namespace for storing data.
+
+---
+
+# Types of Azure Storage
+
+## 1. Blob Storage
+
+Azure Blob Storage is used to store large amounts of unstructured data such as images, videos, documents, backups, logs, and application files.
+
+Blob types:
+
+* Block Blob: Documents, media files, backups.
+* Append Blob: Logging scenarios.
+* Page Blob: Virtual machine disks.
+
+Use Cases:
+
+* File uploads
+* Media streaming
+* Backup and restore
+* Data archiving
+
+Storage Tiers:
+
+* Hot Tier
+* Cool Tier
+* Cold Tier
+* Archive Tier
+
+---
+
+## 2. Azure Files
+
+Azure Files provides fully managed file shares using SMB and NFS protocols. Applications can access files just like traditional network drives.
+
+Features:
+
+* Shared storage
+* Cross-platform support
+* Backup integration
+* Lift-and-shift migrations
+
+Use Cases:
+
+* Shared application data
+* User home directories
+* Legacy application migration
+
+---
+
+## 3. Azure Queue Storage
+
+Azure Queue Storage stores large numbers of messages for asynchronous communication between application components.
+
+Features:
+
+* Decouples services
+* Reliable message processing
+* Supports millions of messages
+
+Use Cases:
+
+* Background processing
+* Task scheduling
+* Order processing systems
+
+---
+
+## 4. Azure Table Storage
+
+Azure Table Storage is a NoSQL key-value datastore designed for storing large volumes of structured, non-relational data.
+
+Features:
+
+* Schema-less design
+* Fast access
+* Cost-effective
+
+Use Cases:
+
+* User profiles
+* Device information
+* Metadata storage
+
+---
+
+## 5. Azure Disk Storage
+
+Azure Disk Storage provides persistent block-level storage for Azure Virtual Machines.
+
+Disk Types:
+
+* Ultra SSD
+* Premium SSD v2
+* Premium SSD
+* Standard SSD
+* Standard HDD
+
+Use Cases:
+
+* VM operating systems
+* Databases
+* Enterprise applications
+
+---
+
+# Azure Data Lake Storage (ADLS Gen2)
+
+Azure Data Lake Storage Gen2 is a highly scalable data lake built on top of Azure Blob Storage. It combines the scalability of Blob Storage with advanced analytics capabilities.
+
+Key Features:
+
+* Hierarchical namespace
+* Big data analytics support
+* High-performance access
+* Hadoop-compatible
+* Fine-grained security
+
+ADLS Gen2 is commonly used with services such as Azure Synapse Analytics, Azure Databricks, Azure HDInsight, and Azure Machine Learning.
+
+---
+
+# Data Lake Storage Structure
+
+Example:
+
+```text
+Storage Account
+│
+├── Container (File System)
+│
+├── Raw Data
+│   ├── Sales
+│   ├── Customer
+│   └── Logs
+│
+├── Processed Data
+│   ├── Cleaned Sales
+│   └── Aggregated Reports
+│
+└── Analytics Data
+    ├── BI Reports
+    └── ML Datasets
+```
+
+The hierarchical namespace enables folders and directories, making it suitable for big data workloads and analytics pipelines.
+
+---
+
+# Azure Blob Storage vs Azure Data Lake Storage Gen2
+
+| Feature                | Blob Storage          | Data Lake Storage Gen2      |
+| ---------------------- | --------------------- | --------------------------- |
+| Primary Purpose        | Object Storage        | Big Data Analytics          |
+| Folder Structure       | Virtual Folders       | Real Directories            |
+| Hierarchical Namespace | No                    | Yes                         |
+| Analytics Optimization | Limited               | High                        |
+| Hadoop Support         | No                    | Yes                         |
+| Cost                   | Lower                 | Slightly Higher             |
+| Best Use Case          | Files, Images, Videos | Data Engineering, Analytics |
+
+---
+
+# Azure Deployment Using Resource Group
+
+1. Create a Resource Group.
+2. Create a Storage Account.
+3. Create App Service or Virtual Machine.
+4. Configure Networking and Security.
+5. Deploy Application Code.
+6. Connect Database and Storage.
+7. Configure Monitoring using Application Insights.
+8. Enable CI/CD through Azure DevOps or GitHub Actions.
+9. Validate deployment.
+10. Monitor and scale resources as needed.
+
+This approach provides centralized management, easier maintenance, cost tracking, and simplified resource governance across the Azure environment.
