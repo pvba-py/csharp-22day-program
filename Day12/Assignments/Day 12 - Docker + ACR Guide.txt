@@ -1,0 +1,133 @@
+For an ASP.NET Core 8.0 application, the typical flow is: build the application, create a Docker image, test it locally, push the image to Azure Container Registry (ACR), and then use that image in Azure services such as Azure Container Apps, Azure Kubernetes Service (AKS), or Azure App Service.
+
+Create a Dockerfile in the root of your ASP.NET Core project:
+
+```dockerfile
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY . .
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/publish
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "YourProject.dll"]
+```
+
+Build and test the Docker image locally:
+
+```bash
+docker build -t myapp:v1 .
+```
+
+Verify the image exists:
+
+```bash
+docker images
+```
+
+Run the container locally:
+
+```bash
+docker run -d -p 8080:8080 --name myapp-container myapp:v1
+```
+
+Check running containers:
+
+```bash
+docker ps
+```
+
+Install and log in to Azure CLI:
+
+```bash
+az login
+```
+
+Create an Azure Container Registry if you do not already have one:
+
+```bash
+az group create --name myResourceGroup --location centralindia
+```
+
+```bash
+az acr create \
+  --resource-group myResourceGroup \
+  --name myacrname \
+  --sku Basic
+```
+
+Retrieve the ACR login server:
+
+```bash
+az acr show --name myacrname --query loginServer --output tsv
+```
+
+Example output:
+
+```text
+myacrname.azurecr.io
+```
+
+Log in to ACR:
+
+```bash
+az acr login --name myacrname
+```
+
+Tag the local Docker image for ACR:
+
+```bash
+docker tag myapp:v1 myacrname.azurecr.io/myapp:v1
+```
+
+Push the image to ACR:
+
+```bash
+docker push myacrname.azurecr.io/myapp:v1
+```
+
+Verify the image exists in ACR:
+
+```bash
+az acr repository list \
+  --name myacrname \
+  --output table
+```
+
+Check image tags:
+
+```bash
+az acr repository show-tags \
+  --name myacrname \
+  --repository myapp \
+  --output table
+```
+
+For CI/CD scenarios, the most commonly used commands are:
+
+```bash
+dotnet publish -c Release
+docker build -t myapp:v1 .
+az acr login --name myacrname
+docker tag myapp:v1 myacrname.azurecr.io/myapp:v1
+docker push myacrname.azurecr.io/myapp:v1
+```
+
+A common production versioning approach is:
+
+```bash
+docker build -t myapp:1.0.0 .
+docker tag myapp:1.0.0 myacrname.azurecr.io/myapp:1.0.0
+docker push myacrname.azurecr.io/myapp:1.0.0
+```
+
+Avoid relying only on the `latest` tag in production. Use semantic versions such as `1.0.0`, `1.0.1`, and `1.1.0` so deployments can be rolled back easily if needed.
