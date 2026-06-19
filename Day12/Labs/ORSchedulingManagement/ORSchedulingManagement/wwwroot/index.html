@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OR Scheduling Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        nav {
+            background: #1e3a8a;
+            color: white;
+            padding: 18px 32px;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .container {
+            padding: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 26px;
+            color: #111827;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+
+        th {
+            background: #e5e7eb;
+            text-align: left;
+            padding: 14px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .Scheduled {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .InProgress {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .Pending {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .Completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            color: #dc2626;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav>OR Scheduling Management - Made by Adithya PVB</nav>
+
+    <div class="container">
+        <div class="card">
+            <h1>Today's OR Schedule</h1>
+            <p class="subtitle">Minimal dashboard backed by ASP.NET Core Web API</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Surgeon Name</th>
+                        <th>Department</th>
+                        <th>Operation Room</th>
+                        <th>Surgery Type</th>
+                        <th>Scheduled Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr>
+                        <td colspan="7">Loading data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function loadUsers() {
+            const tableBody = document.getElementById("usersTableBody");
+
+            try {
+                const response = await fetch("/api/users");
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch users");
+                }
+
+                const users = await response.json();
+
+                tableBody.innerHTML = "";
+
+                users.forEach(user => {
+                    const statusClass = user.status.replace(" ", "");
+
+                    const row = `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.surgeonName}</td>
+                            <td>${user.department}</td>
+                            <td>${user.operationRoom}</td>
+                            <td>${user.surgeryType}</td>
+                            <td>${user.scheduledTime}</td>
+                            <td>
+                                <span class="badge ${statusClass}">
+                                    ${user.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="error">
+                            Unable to load dashboard data.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        loadUsers();
+    </script>
+</body>
+</html>

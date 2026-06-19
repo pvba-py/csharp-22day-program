@@ -1,0 +1,666 @@
+Absolutely, Adithya — here’s your **manual Docker + ACR + Azure Container Apps deployment cheatsheet** for your ASP.NET Core Web API project.
+
+This is the flow you successfully completed:
+
+```text
+Code Change
+   ↓
+Docker Build
+   ↓
+Tag Image
+   ↓
+Push to Azure Container Registry
+   ↓
+Update Azure Container App
+   ↓
+Test Deployed URL
+```
+
+***
+
+# Manual Build & Deploy Cheatsheet
+
+## ASP.NET Core Web API → Docker → ACR → Azure Container Apps
+
+***
+
+## 0. Your Current Setup
+
+Use these names unless you create new ones:
+
+```text
+Resource Group: RG-ORScheduling-India
+Location: centralindia
+ACR Name: acrormadithya007
+ACR Login Server: acrormadithya007.azurecr.io
+Local Image Name: or-scheduling-api
+Container App Name: or-scheduling-api
+Container Apps Environment: or-scheduling-env
+Container Port: 8080
+```
+
+***
+
+# PART A: One-Time Setup Commands
+
+You only need these when starting from scratch or on a new machine/subscription.
+
+***
+
+## 1. Login to Azure
+
+```powershell
+az login
+```
+
+Check active subscription:
+
+```powershell
+az account show --output table
+```
+
+If needed, set subscription:
+
+```powershell
+az account set --subscription YOUR_SUBSCRIPTION_ID
+```
+
+***
+
+## 2. Create Resource Group
+
+```powershell
+az group create --name RG-ORScheduling-India --location centralindia
+```
+
+***
+
+## 3. Register Required Providers
+
+```powershell
+az provider register -n Microsoft.ContainerRegistry --wait
+```
+
+```powershell
+az provider register -n Microsoft.App --wait
+```
+
+```powershell
+az provider register -n Microsoft.OperationalInsights --wait
+```
+
+Validate:
+
+```powershell
+az provider show -n Microsoft.ContainerRegistry --query registrationState -o tsv
+```
+
+```powershell
+az provider show -n Microsoft.App --query registrationState -o tsv
+```
+
+```powershell
+az provider show -n Microsoft.OperationalInsights --query registrationState -o tsv
+```
+
+Expected:
+
+```text
+Registered
+```
+
+***
+
+## 4. Create Azure Container Registry
+
+ACR name must be:
+
+```text
+lowercase + numbers only
+no underscore
+no hyphen
+globally unique
+```
+
+Command:
+
+```powershell
+az acr create --resource-group RG-ORScheduling-India --name acrormadithya007 --sku Basic --admin-enabled true
+```
+
+Validate:
+
+```powershell
+az acr show --name acrormadithya007 --query loginServer -o tsv
+```
+
+Expected:
+
+```text
+acrormadithya007.azurecr.io
+```
+
+***
+
+## 5. Install Container Apps Extension
+
+```powershell
+az extension add --name containerapp --upgrade
+```
+
+If it says preview extension, that is okay.
+
+***
+
+## 6. Create Container Apps Environment
+
+Low-cost version without Log Analytics:
+
+```powershell
+az containerapp env create --name or-scheduling-env --resource-group RG-ORScheduling-India --location centralindia --logs-destination none
+```
+
+If `--logs-destination none` fails, use:
+
+```powershell
+az containerapp env create --name or-scheduling-env --resource-group RG-ORScheduling-India --location centralindia
+```
+
+***
+
+# PART B: Local Docker Build & Test
+
+Use this whenever you want to test locally before deploying.
+
+***
+
+## 7. Go to Project Folder
+
+Go to the folder containing your `Dockerfile`.
+
+Example:
+
+```powershell
+cd "C:\Users\Admin\Desktop\Prata Venkata Bhanu Adithya\Day12\Labs\ORSchedulingManagement\ORSchedulingManagement"
+```
+
+Validate:
+
+```powershell
+dir Dockerfile
+```
+
+***
+
+## 8. Build Docker Image Locally
+
+For first version:
+
+```powershell
+docker build -t or-scheduling-api:v1 .
+```
+
+For next update, increment version:
+
+```powershell
+docker build -t or-scheduling-api:v2 .
+```
+
+Example next versions:
+
+```text
+v1, v2, v3, v4
+```
+
+Validate:
+
+```powershell
+docker images
+```
+
+You should see:
+
+```text
+or-scheduling-api   v1
+```
+
+or your latest version.
+
+***
+
+## 9. Run Container Locally
+
+```powershell
+docker run -d --name or-scheduling-api-test -p 5000:8080 or-scheduling-api:v1
+```
+
+If testing `v2`, use:
+
+```powershell
+docker run -d --name or-scheduling-api-test -p 5000:8080 or-scheduling-api:v2
+```
+
+Validate container is running:
+
+```powershell
+docker ps
+```
+
+Open dashboard:
+
+```text
+http://localhost:5000
+```
+
+Test API:
+
+```powershell
+curl http://localhost:5000/api/users
+```
+
+***
+
+## 10. Stop Local Test Container
+
+```powershell
+docker stop or-scheduling-api-test
+```
+
+```powershell
+docker rm or-scheduling-api-test
+```
+
+If container name already exists, remove it:
+
+```powershell
+docker rm -f or-scheduling-api-test
+```
+
+***
+
+# PART C: Push Image to Azure Container Registry
+
+***
+
+## 11. Login Docker to ACR
+
+```powershell
+az acr login --name acrormadithya007
+```
+
+Expected:
+
+```text
+Login Succeeded
+```
+
+***
+
+## 12. Tag Image for ACR
+
+For `v1`:
+
+```powershell
+docker tag or-scheduling-api:v1 acrormadithya007.azurecr.io/or-scheduling-api:v1
+```
+
+For `v2`:
+
+```powershell
+docker tag or-scheduling-api:v2 acrormadithya007.azurecr.io/or-scheduling-api:v2
+```
+
+For `v3`:
+
+```powershell
+docker tag or-scheduling-api:v3 acrormadithya007.azurecr.io/or-scheduling-api:v3
+```
+
+Validate:
+
+```powershell
+docker images
+```
+
+You should see:
+
+```text
+acrormadithya007.azurecr.io/or-scheduling-api   v1
+```
+
+***
+
+## 13. Push Image to ACR
+
+For `v1`:
+
+```powershell
+docker push acrormadithya007.azurecr.io/or-scheduling-api:v1
+```
+
+For `v2`:
+
+```powershell
+docker push acrormadithya007.azurecr.io/or-scheduling-api:v2
+```
+
+For `v3`:
+
+```powershell
+docker push acrormadithya007.azurecr.io/or-scheduling-api:v3
+```
+
+Expected output ends with:
+
+```text
+digest: sha256:...
+```
+
+***
+
+## 14. Validate Image in ACR
+
+List repositories:
+
+```powershell
+az acr repository list --name acrormadithya007 --output table
+```
+
+Expected:
+
+```text
+or-scheduling-api
+```
+
+Show tags:
+
+```powershell
+az acr repository show-tags --name acrormadithya007 --repository or-scheduling-api --output table
+```
+
+Expected:
+
+```text
+v1
+v2
+v3
+```
+
+depending on what you pushed.
+
+***
+
+# PART D: First-Time Deployment to Azure Container Apps
+
+Use this only if the Container App does **not** already exist.
+
+***
+
+## 15. Create Container App
+
+For `v1`:
+
+```powershell
+az containerapp create --name or-scheduling-api --resource-group RG-ORScheduling-India --environment or-scheduling-env --image acrormadithya007.azurecr.io/or-scheduling-api:v1 --registry-server acrormadithya007.azurecr.io --registry-username $(az acr credential show --name acrormadithya007 --query username -o tsv) --registry-password $(az acr credential show --name acrormadithya007 --query passwords[0].value -o tsv) --target-port 8080 --ingress external --cpu 0.25 --memory 0.5Gi --min-replicas 0 --max-replicas 1
+```
+
+Low-cost settings:
+
+```text
+--min-replicas 0
+--max-replicas 1
+--cpu 0.25
+--memory 0.5Gi
+```
+
+***
+
+# PART E: Updating Existing Deployed App
+
+Use this every time you make a code change.
+
+***
+
+## 16. Manual Update Flow
+
+Example: update from `v1` to `v2`.
+
+### Step 1: Change your code
+
+Example:
+
+
+
+Save the file.
+
+***
+
+### Step 2: Build new image
+
+```powershell
+docker build -t or-scheduling-api:v2 .
+```
+
+***
+
+### Step 3: Tag new image
+
+```powershell
+docker tag or-scheduling-api:v2 acrormadithya007.azurecr.io/or-scheduling-api:v2
+```
+
+***
+
+### Step 4: Push new image
+
+```powershell
+docker push acrormadithya007.azurecr.io/or-scheduling-api:v2
+```
+
+***
+
+### Step 5: Update Azure Container App
+
+```powershell
+az containerapp update --name or-scheduling-api --resource-group RG-ORScheduling-India --image acrormadithya007.azurecr.io/or-scheduling-api:v2
+```
+
+Your URL stays the same.
+
+***
+
+# PART F: Get and Test Deployed App
+
+***
+
+## 17. Get App URL
+
+```powershell
+az containerapp show --name or-scheduling-api --resource-group RG-ORScheduling-India --query properties.configuration.ingress.fqdn -o tsv
+```
+
+Open in browser:
+
+```text
+https://YOUR_OUTPUT_URL
+```
+
+Example:
+
+```text
+https://or-scheduling-api.xxxxx.centralindia.azurecontainerapps.io
+```
+
+***
+
+## 18. Test API
+
+```powershell
+curl https://YOUR_OUTPUT_URL/api/users
+```
+
+Or open in browser:
+
+```text
+https://YOUR_OUTPUT_URL/api/users
+```
+
+Test single user:
+
+```text
+https://YOUR_OUTPUT_URL/api/users/1
+```
+
+***
+
+## 19. If Browser Shows Old UI
+
+Use hard refresh:
+
+```text
+Ctrl + F5
+```
+
+Or open in incognito/private window.
+
+***
+
+# PART G: Useful Debug Commands
+
+***
+
+## 20. View Container App Logs
+
+```powershell
+az containerapp logs show --name or-scheduling-api --resource-group RG-ORScheduling-India --follow
+```
+
+***
+
+## 21. Check Container App Details
+
+```powershell
+az containerapp show --name or-scheduling-api --resource-group RG-ORScheduling-India --output table
+```
+
+***
+
+## 22. Check Revisions
+
+```powershell
+az containerapp revision list --name or-scheduling-api --resource-group RG-ORScheduling-India --output table
+```
+
+***
+
+## 23. Check Current Image Used by App
+
+```powershell
+az containerapp show --name or-scheduling-api --resource-group RG-ORScheduling-India --query properties.template.containers[0].image -o tsv
+```
+
+Expected example:
+
+```text
+acrormadithya007.azurecr.io/or-scheduling-api:v2
+```
+
+***
+
+## 24. Check Scaling Settings
+
+```powershell
+az containerapp show --name or-scheduling-api --resource-group RG-ORScheduling-India --query properties.template.scale
+```
+
+You want:
+
+```json
+{
+  "maxReplicas": 1,
+  "minReplicas": 0
+}
+```
+
+***
+
+# PART H: Cost Control
+
+***
+
+## 25. Make Sure App Can Scale to Zero
+
+```powershell
+az containerapp update --name or-scheduling-api --resource-group RG-ORScheduling-India --min-replicas 0 --max-replicas 1
+```
+
+***
+
+## 26. Delete Everything After Practice
+
+This is the safest command to avoid consuming your student credit:
+
+```powershell
+az group delete --name RG-ORScheduling-India --yes --no-wait
+```
+
+This deletes:
+
+```text
+Azure Container App
+Container Apps Environment
+Azure Container Registry
+Pushed Docker images
+Log Analytics workspace, if created
+All related resources inside the group
+```
+
+***
+
+# Your Daily Manual Deployment Shortcut
+
+After your first setup is done, you usually only need these commands.
+
+For next update, say `v3`:
+
+```powershell
+docker build -t or-scheduling-api:v3 .
+```
+
+```powershell
+docker tag or-scheduling-api:v3 acrormadithya007.azurecr.io/or-scheduling-api:v3
+```
+
+```powershell
+docker push acrormadithya007.azurecr.io/or-scheduling-api:v3
+```
+
+```powershell
+az containerapp update --name or-scheduling-api --resource-group RG-ORScheduling-India --image acrormadithya007.azurecr.io/or-scheduling-api:v3
+```
+
+Then get URL:
+
+```powershell
+az containerapp show --name or-scheduling-api --resource-group RG-ORScheduling-India --query properties.configuration.ingress.fqdn -o tsv
+```
+
+***
+
+# Is This CI/CD?
+
+No — this is **manual deployment**.
+
+CI/CD would be:
+
+```text
+Push code to GitHub
+↓
+GitHub Actions automatically builds Docker image
+↓
+Pushes image to ACR
+↓
+Updates Azure Container App
+```
+
+Your current manual flow is perfect for learning Docker and Azure deployment fundamentals. Next step later: we can automate this using **GitHub Actions CI/CD**.

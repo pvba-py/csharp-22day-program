@@ -1,0 +1,6 @@
+@ORSchedulingManagement_HostAddress = http://localhost:5009
+
+GET {{ORSchedulingManagement_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
