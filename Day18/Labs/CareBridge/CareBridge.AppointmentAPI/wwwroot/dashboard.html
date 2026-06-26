@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareBridge - HCA Healthcare Live Dashboard</title>
+
+    <!-- SignalR Client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Segoe UI,Arial,sans-serif;
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        .header {
+            background: #1F4E79;
+            color: #fff;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .header h1 {
+                font-size: 22px;
+                font-weight: 600;
+            }
+
+            .header .sub {
+                font-size: 13px;
+                opacity: .85;
+            }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            background: #dc3545;
+            margin-right: 6px;
+        }
+
+            .status-dot.connected {
+                background: #28a745;
+            }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            padding: 18px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 2px 6px rgba(0,0,0,.08);
+        }
+
+            .card h2 {
+                margin-bottom: 14px;
+                color: #1F4E79;
+                font-size: 14px;
+                text-transform: uppercase;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #EBF3FB;
+            color: #1F4E79;
+            padding: 8px;
+            text-align: left;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        input {
+            padding: 7px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        .btn {
+            background: #2E75B6;
+            color: white;
+            border: none;
+            padding: 7px 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+            .btn:hover {
+                background: #1F4E79;
+            }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #FFF5D6;
+            color: #7F5600;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .notif-area {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .notif-item {
+            background: #EBF3FB;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-left: 4px solid #2E75B6;
+            border-radius: 5px;
+        }
+
+        .ts {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+
+        <div>
+            <h1>CareBridge - HCA Healthcare</h1>
+            <div class="sub">
+                Azure Service Bus Event-Driven Architecture Demo
+            </div>
+        </div>
+
+        <div>
+            <span id="dot" class="status-dot"></span>
+            <span id="conn-status">Disconnected</span>
+        </div>
+
+    </div>
+
+    <div class="grid">
+
+        <!-- Pending Appointments -->
+        <div class="card full-width">
+
+            <h2>Pending Appointments</h2>
+
+            <div style="margin-bottom:15px">
+
+                <input id="appt-id"
+                       type="number"
+                       placeholder="Appointment ID"
+                       style="width:170px;">
+
+                <input id="conf-by"
+                       type="text"
+                       placeholder="Receptionist Name"
+                       style="width:250px;">
+
+                <button class="btn"
+                        onclick="confirmAppointment()">
+                    Confirm Appointment
+                </button>
+
+                <button class="btn"
+                        style="background:#6c757d"
+                        onclick="loadPending()">
+                    Refresh
+                </button>
+
+            </div>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Provider</th>
+                        <th>Department</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="pending-body">
+                    <tr>
+                        <td colspan="7">
+                            Loading...
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Notifications -->
+
+        <div class="card">
+
+            <h2>🔔 Real-Time Notifications</h2>
+
+            <div id="notif-area"
+                 class="notif-area">
+
+                Waiting for notifications...
+
+            </div>
+
+        </div>
+
+        <!-- Analytics -->
+
+        <div class="card">
+
+            <h2>📊 Today's Analytics</h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Department</th>
+                        <th>Provider</th>
+                        <th>Confirmed</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="analytics-body">
+                    <tr>
+                        <td colspan="3">Loading...</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <div id="analytics-src"
+                 style="font-size:12px;margin-top:8px;color:#666;">
+            </div>
+
+            <button class="btn"
+                    style="margin-top:10px"
+                    onclick="loadAnalytics()">
+                Refresh Analytics
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/hubs/appointments")
+    .withAutomaticReconnect()
+    .build();
+
+connection.on("ReceiveNotification", data => {
+
+    const area=document.getElementById("notif-area");
+
+    const div=document.createElement("div");
+
+    div.className="notif-item";
+
+    div.innerHTML=`
+        <strong>${data.message}</strong>
+        <div>Patient : ${data.patientName}</div>
+        <div>Provider : ${data.providerName}</div>
+        <div>Department : ${data.department}</div>
+        <div>Confirmed By : ${data.confirmedBy}</div>
+        <div class="ts">${data.confirmedAt}</div>
+    `;
+
+    area.prepend(div);
+
+    loadPending();
+    loadAnalytics();
+
+});
+
+connection.onreconnecting(() => setStatus(false));
+
+connection.onreconnected(() => setStatus(true));
+
+connection.start()
+    .then(()=>setStatus(true))
+    .catch(err=>{
+        console.error(err);
+        setStatus(false);
+    });
+
+function setStatus(connected){
+
+    document.getElementById("dot").className=
+        connected
+        ? "status-dot connected"
+        : "status-dot";
+
+    document.getElementById("conn-status").textContent=
+        connected
+        ? "Connected"
+        : "Disconnected";
+}
+
+async function confirmAppointment(){
+
+    try{
+
+        const id=document.getElementById("appt-id").value;
+        const by=document.getElementById("conf-by").value;
+
+        if(!id || !by){
+
+            alert("Enter Appointment ID and Receptionist Name.");
+            return;
+        }
+
+        const response=await fetch("/api/appointment/confirm",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                appointmentId:parseInt(id),
+                confirmedBy:by
+
+            })
+
+        });
+
+        const json=await response.json();
+
+        if(!response.ok){
+
+            alert(json.message);
+            return;
+
+        }
+
+        alert(json.message);
+
+        loadPending();
+
+    }
+    catch(ex){
+
+        console.error(ex);
+        alert("Unable to reach server.");
+
+    }
+
+}
+
+async function loadPending(){
+
+    try{
+
+        const response=await fetch("/api/appointment/pending");
+
+        const data=await response.json();
+
+        const body=document.getElementById("pending-body");
+
+        if(data.length===0){
+
+            body.innerHTML=
+                "<tr><td colspan='7'>No Pending Appointments.</td></tr>";
+
+            return;
+        }
+
+        body.innerHTML=data.map(a=>`
+
+            <tr>
+
+                <td>${a.appointmentId}</td>
+
+                <td>${a.patientName}</td>
+
+                <td>${a.providerName}</td>
+
+                <td>${a.departmentName}</td>
+
+                <td>${new Date(a.appointmentDate).toLocaleString()}</td>
+
+                <td><span class="badge">Pending</span></td>
+
+                <td>
+
+                    <button class="btn"
+                            onclick="quickConfirm(${a.appointmentId})">
+
+                        Confirm
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+
+    }
+    catch(ex){
+
+        console.error(ex);
+
+    }
+
+}
+
+function quickConfirm(id){
+
+    document.getElementById("appt-id").value=id;
+
+    if(document.getElementById("conf-by").value==="")
+        document.getElementById("conf-by").value="Reception Desk 1";
+
+    confirmAppointment();
+
+}
+
+async function loadAnalytics(){
+
+    try{
+
+        const response=await fetch("/api/appointment/analytics");
+
+        const json=await response.json();
+
+        document.getElementById("analytics-src").innerHTML=
+            "Source : <strong>"+json.source+"</strong>";
+
+        const body=document.getElementById("analytics-body");
+
+        if(!json.data || json.data.length===0){
+
+            body.innerHTML=
+                "<tr><td colspan='3'>No Analytics Available.</td></tr>";
+
+            return;
+        }
+
+        body.innerHTML=json.data.map(r=>`
+
+            <tr>
+
+                <td>${r.departmentName}</td>
+
+                <td>${r.providerName}</td>
+
+                <td>${r.totalConfirmed}</td>
+
+            </tr>
+
+        `).join("");
+
+    }
+    catch(ex){
+
+        console.error(ex);
+
+    }
+
+}
+
+loadPending();
+
+loadAnalytics();
+
+    </script>
+
+</body>
+</html>
