@@ -1,0 +1,67 @@
+# CASE STUDY 5: HOSPITAL SUMMARY REPORT MODULE
+
+Concept Focus: Arrays/Lists, Foreach Loops, Classes, Objects, Namespaces
+
+### Business Scenario
+At the end of the day, the Hospital Administrator wants to see a summary report of all patients visited today. Since we are simulating this, your program must internally generate a list of dummy patient data and then process it to find key statistics (e.g., How many patients visited? What is the total revenue?).
+
+### Learning Objectives
+- Using `List<T>` to store objects.
+- Using `foreach` to iterate through data.
+- Aggregating data (Sum, Count, Average).
+
+### Task Requirements
+
+#### Part 1: Setup Data Class
+Create a `PatientRecord` class with:
+- Name
+- Department
+- BillAmount
+- Status (Admitted/Discharged)
+
+#### Part 2: Simulate Data
+In your `Main` method, create a List of `PatientRecord` and manually add at least 5-6 dummy records with different departments and bill amounts.
+
+#### Part 3: Generate Statistics
+Write logic to calculate:
+1. Total Patients: Simple count of the list.
+2. Total Revenue: Sum of all BillAmounts.
+3. Department Breakdown: Count how many patients visited each department (e.g., General: 2, Dental: 3).
+
+#### Part 4: Display Summary Report
+Print a professional-looking daily report.
+
+### Expected Console Output
+
+```
+--------------------------------------------------
+       DAILY HOSPITAL ACTIVITY REPORT
+--------------------------------------------------
+Date: [Today's Date]
+
+Patient List:
+1. John Doe   - General   - $500
+2. Jane Smith - Dental    - $1200
+3. Bob Brown  - General   - $400
+4. Alice W.   - Ortho     - $2500
+5. Sam K.     - Dental    - $800
+
+--------------------------------------------------
+SUMMARY STATISTICS
+--------------------------------------------------
+Total Patients Visited:  5
+Total Revenue:           $5,400
+
+Traffic by Department:
+- General: 2
+- Dental:  2
+- Ortho:   1
+
+End of Report.
+--------------------------------------------------
+```
+
+### Technical Requirements
+- Use `List<PatientRecord>` instead of a simple array.
+- Use a `foreach` loop to calculate the totals.
+- Try using LINQ (optional challenge) for counting departments, or just use standard loops/counters.

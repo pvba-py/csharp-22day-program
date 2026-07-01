@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Funds Transfer";
+}
+
+<h2>Funds Transfer</h2>
+
+<form method="post" asp-controller="Transfer" asp-action="Index">
+    <div>
+        <label>From Account:</label>
+        <input type="text" name="fromAccount" required />
+    </div>
+    <div>
+        <label>To Account:</label>
+        <input type="text" name="toAccount" required />
+    </div>
+    <div>
+        <label>Amount:</label>
+        <input type="number" name="amount" required />
+    </div>
+    <button type="submit">Transfer</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <p style="color:red">@ViewBag.Message</p>
+}

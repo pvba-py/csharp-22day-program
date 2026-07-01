@@ -1,0 +1,76 @@
+# CASE STUDY 3: VITAL SIGNS MONITORING MODULE
+
+Concept Focus: Control Statements, Exception Handling, Methods, Loops
+
+### Business Scenario
+Nurses need a quick tool to record patient vitals (Temperature, Oxygen Level, Pulse Rate) and immediately know if the patient is in a critical condition. The system must classify the patient's status based on medical rules.
+
+### Learning Objectives
+- Writing complex conditional logic (if-else if-else).
+- Handling numeric inputs safely.
+- Implementing logic to categorize data.
+
+### Task Requirements
+
+#### Part 1: Input Logic
+Create a program that asks for the following inputs:
+- Patient Name
+- Body Temperature (Celsius)
+- Oxygen Level (%)
+- Pulse Rate (BPM)
+
+All numeric inputs must be validated (e.g., Oxygen level cannot be 150%).
+
+#### Part 2: Classification Logic
+Implement a method `CheckStatus(temp, oxygen, pulse)` that returns a status string based on these rules:
+
+Critical/Emergency:
+- Temperature > 39.0 OR
+- Oxygen < 90 OR
+- Pulse < 50 OR Pulse > 120
+
+Observation Needed:
+- Temperature > 37.5 OR
+- Oxygen < 95 OR
+- Pulse > 100
+
+Normal:
+- If none of the above conditions are met.
+
+#### Part 3: Reporting
+Print a Vital Signs Report showing the input values and the calculated status in a clear format.
+
+### Expected Console Output
+
+```
+--------------------------------------------------
+       VITAL SIGNS MONITOR
+--------------------------------------------------
+Enter Patient Name: Sarah Lee
+Enter Temperature (C): 38.2
+Enter Oxygen Level (%): 96
+Enter Pulse Rate (BPM): 105
+
+[Analyzing Data...]
+
+--------------------------------------------------
+       MEDICAL ASSESSMENT REPORT
+--------------------------------------------------
+Patient: Sarah Lee
+
+Vitals Recorded:
+- Temp:   38.2 C
+- Oxygen: 96 %
+- Pulse:  105 BPM
+
+Status Assessment: OBSERVATION NEEDED
+(Reason: High Pulse or Elevated Temp)
+
+Action: Nurse to monitor every hour.
+--------------------------------------------------
+```
+
+### Technical Requirements
+- Use `double` for temperature and `int` for oxygen/pulse.
+- Use logical operators (&&, ||) efficiently in your `if` statements.
+- Ensure the program handles non-numeric input gracefully using `try-catch`.

@@ -1,0 +1,48 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  name: Default
+
+variables:
+  buildConfiguration: 'Release'
+  dotnetVersion: '8.x'
+  webAppName: 'Change This Now'
+  azureSubscription: 'Change This Now'
+
+steps:
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
+    inputs:
+      packageType: 'sdk'
+      version: $(dotnetVersion)
+
+  - script: dotnet restore ./BankingApp.sln
+    displayName: 'Restore packages'
+
+  - script: dotnet build ./BankingApp.sln --configuration $(buildConfiguration)
+    displayName: 'Build solution'
+
+  - script: dotnet test ./BankingApp.sln --no-build --configuration $(buildConfiguration)
+    displayName: 'Run tests'
+
+  - script: dotnet publish ./BankingApp.sln -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/publish_output
+    displayName: 'Publish application'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish build artifacts'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/publish_output'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
+
+  - task: AzureWebApp@1
+    displayName: 'Deploy to Azure Web App'
+    inputs:
+      azureSubscription: $(azureSubscription)
+      appType: 'webApp'     # REQUIRED FIX
+      appName: $(webAppName)
+      package: '$(Build.ArtifactStagingDirectory)/publish_output'

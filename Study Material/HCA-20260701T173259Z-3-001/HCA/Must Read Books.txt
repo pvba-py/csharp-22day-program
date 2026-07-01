@@ -1,0 +1,19 @@
+Must Read Books
+
+Head First Design Patterns by Eric Freeman and Elisabeth Robson
+Teaches you the 23 classic design patterns through visuals, stories, and hands-on exercises instead of dry theory. You'll learn why code breaks when it grows, and how patterns like Factory, Observer, and Strategy prevent that. By the end you'll start seeing these patterns in code you read every day.
+
+Fundamentals of Software Architecture — Richards & Neal Ford
+Covers the major architectural styles — layered, microservices, event-driven — and walks you through how to choose between them based on what your system actually needs. It also covers soft skills like presenting architecture decisions to stakeholders, which most technical books completely ignore. A practical read, not an academic one.
+
+Designing Machine Learning Systems — Chip Huyen
+Takes you through the full journey of an ML system — from collecting and managing training data, to deploying models, to monitoring them when they silently start going wrong in production. It draws heavily from how companies like Airbnb and Netflix actually run ML at scale. Fills the gap between what college teaches and what the job actually looks like.
+
+ML System Design: End-to-End Examples -  Valerii Babushkin and Arseny Kravchenko
+Walks you through real ML product scenarios — recommendation systems, fraud detection, search ranking — and shows how you'd scope, design, and build each one from scratch. Good for building the habit of thinking about an ML problem as a complete product, not just a model. Works well as a follow-up to Chip Huyen's book.
+
+Co-Intelligence — Ethan Mollick (2024)
+Wharton professor who has spent two years living with AI tools and studying how they change knowledge work. Very grounded, very honest — he neither hypes nor dismisses. The core argument is that the people who treat AI as a collaborator rather than a tool or a threat will pull ahead fast. Short book, very readable, genuinely useful for anyone managing or mentoring people in tech.
+
+AI Engineering — Chip Huyen (2025)
+Same author as Designing ML Systems, but this one is about building products on top of foundation models — RAG, prompt engineering, evaluation, fine-tuning, AI agents. This is the exact skillset being hired for right now. If your interns want to be relevant in 2026, this is the book.

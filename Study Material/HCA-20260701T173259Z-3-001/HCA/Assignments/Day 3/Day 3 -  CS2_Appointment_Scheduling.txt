@@ -1,0 +1,80 @@
+# CASE STUDY 2: APPOINTMENT SCHEDULING MODULE
+
+Concept Focus: Methods, Control Statements (if-else, switch), Loops (while, for), Arrays/Lists, Objects
+
+### Business Scenario
+The hospital has multiple departments (General Medicine, Orthopedics, Dental). Patients need to book appointments with available doctors. The system should allow a user to select a department, view available doctors, and book a time slot.
+
+### Learning Objectives
+- Using Arrays or Lists to store static data (Departments, Doctors).
+- Implementing Menu-Driven programs using loops.
+- Using Control Statements to navigate between menus.
+- Creating an Appointment object to store transaction details.
+
+### Task Requirements
+
+#### Part 1: Data Setup
+Create arrays or lists to store:
+- Departments: "General", "Dental", "Orthopedics"
+- Doctors for General: "Dr. A. Kumar", "Dr. B. Singh"
+- Doctors for Dental: "Dr. C. Roy", "Dr. D. Gupta"
+
+#### Part 2: Interactive Menu System
+Create a console menu that loops until the user finishes booking:
+1. Ask the user to enter their Name (since this is an isolated module).
+2. Display the list of Departments.
+3. Once a department is chosen, display the Doctors in that department.
+4. Once a doctor is chosen, display available time slots (e.g., "10:00 AM", "11:00 AM").
+
+#### Part 3: Booking Logic
+- Validate that the user selects a valid number from the menu.
+- If the user selects an invalid option, show an error and ask again (use a while loop).
+- Once confirmed, create an "Appointment" object storing: Patient Name, Department, Doctor, and Time.
+
+#### Part 4: Display Appointment Ticket
+Print a final confirmation ticket.
+
+### Expected Console Output
+
+```
+--------------------------------------------------
+       APPOINTMENT BOOKING SYSTEM
+--------------------------------------------------
+Enter Patient Name: Rohan Das
+
+Select Department:
+1. General Medicine
+2. Dental
+3. Orthopedics
+Enter Choice: 1
+
+Select Doctor:
+1. Dr. A. Kumar
+2. Dr. B. Singh
+Enter Choice: 1
+
+Select Time Slot:
+1. 10:00 AM
+2. 11:00 AM
+3. 12:00 PM
+Enter Choice: 2
+
+[Booking Confirmed]
+
+--------------------------------------------------
+            APPOINTMENT TICKET
+--------------------------------------------------
+Patient:    Rohan Das
+Department: General Medicine
+Doctor:     Dr. A. Kumar
+Time:       11:00 AM
+Status:     Confirmed
+
+Please arrive 15 mins before your slot.
+--------------------------------------------------
+```
+
+### Technical Requirements
+- Use "while(true)" or "do-while" for the menu loops.
+- Use "switch" or "if-else" to handle menu selections.
+- Ensure the program does not crash if a user enters a letter instead of a number for the menu choice.

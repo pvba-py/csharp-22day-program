@@ -1,0 +1,75 @@
+# CASE STUDY 4: BILLING AND COST ESTIMATION MODULE
+
+Concept Focus: Variables, Constants, Methods, Classes, Properties, Arithmetic Operations
+
+### Business Scenario
+The billing department needs a calculator to generate patient bills. The bill depends on the type of patient (Senior Citizens get discounts) and the specific services they used (Consultation, Blood Test, X-Ray).
+
+### Learning Objectives
+- Using Constants for fixed prices.
+- Using Arithmetic operators for totals and discounts.
+- Creating a Billing class to manage financial data.
+
+### Task Requirements
+
+#### Part 1: Define Fee Constants
+Use `const` or `readonly` variables to store standard rates:
+- Consultation Fee: 500
+- Blood Test: 200
+- X-Ray: 1000
+- Admission Fee: 2000
+
+#### Part 2: Discounts Logic
+Implement logic to determine the discount:
+- Senior Citizens (Age > 60): 20% Discount
+- Children (Age < 10): 50% Discount on Consultation only
+- Others: No Discount
+
+#### Part 3: Interactive Billing
+Create a console program that:
+1. Asks for Patient Name and Age.
+2. Shows a menu of services and lets the user add multiple services to their bill (e.g., "Press 1 to add Blood Test").
+3. Stops adding services when the user says "Done".
+4. Calculates the Total, applies the Discount, adds 5% Tax, and prints the Net Amount.
+
+### Expected Console Output
+
+```
+--------------------------------------------------
+       HOSPITAL BILLING CALCULATOR
+--------------------------------------------------
+Patient Name: Mr. Verma
+Patient Age: 65
+
+Add Services:
+1. Consultation (500)
+2. Blood Test (200)
+3. X-Ray (1000)
+4. Done
+
+Choice: 1
+[Added Consultation]
+Choice: 2
+[Added Blood Test]
+Choice: 4
+
+[Calculating Bill...]
+
+--------------------------------------------------
+            FINAL BILL INVOICE
+--------------------------------------------------
+Patient: Mr. Verma (Senior Citizen)
+
+Base Amount:      700.00
+Discount (20%):  -140.00
+Tax (5%):         +28.00
+
+--------------------------------------------------
+TOTAL PAYABLE:    588.00
+--------------------------------------------------
+```
+
+### Technical Requirements
+- Use `decimal` type for currency calculations to ensure precision.
+- Use a `while` loop to allow adding multiple services.
+- Create a `Bill` class to store the running totals.

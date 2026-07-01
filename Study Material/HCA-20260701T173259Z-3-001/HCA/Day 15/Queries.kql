@@ -1,0 +1,150 @@
+### 1. Failed Transfers
+
+```kql
+customEvents
+| where name == "FundsTransferFailed"
+| summarize Failures = count()
+    by FromAccount = tostring(customDimensions.FromAccount),
+       bin(timestamp, 5m)
+| order by timestamp desc
+```
+
+---
+
+### 2. Fraud Detection (> 5 Failures per Account in 10 Minutes)
+
+```kql
+customEvents
+| where name == "FundsTransferFailed"
+| summarize Attempts = count()
+    by FromAccount = tostring(customDimensions.FromAccount),
+       bin(timestamp, 10m)
+| where Attempts > 5
+| order by Attempts desc
+```
+
+---
+
+### 3. All Transfer Activity (Attempts, Successes, Failures)
+
+```kql
+customEvents
+| where name in (
+    "FundsTransferAttempt",
+    "FundsTransferSuccess",
+    "FundsTransferFailed"
+)
+| summarize EventCount = count()
+    by name,
+       bin(timestamp, 5m)
+| render timechart
+```
+
+---
+
+### 4. Failed Transfers by Reason
+
+```kql
+customEvents
+| where name == "FundsTransferFailed"
+| summarize Failures = count()
+    by Reason = tostring(customDimensions.Reason),
+       bin(timestamp, 10m)
+| render barchart
+```
+
+---
+
+### 5. Success vs Failure Ratio
+
+```kql
+customEvents
+| where name in (
+    "FundsTransferSuccess",
+    "FundsTransferFailed"
+)
+| summarize
+    Success = countif(name == "FundsTransferSuccess"),
+    Failure = countif(name == "FundsTransferFailed")
+| project
+    Success,
+    Failure,
+    SuccessRate = round(todouble(Success) / (Success + Failure) * 100, 2),
+    FailureRate = round(todouble(Failure) / (Success + Failure) * 100, 2)
+```
+
+---
+
+### 6. High-Risk Accounts (More Than 3 Failed Attempts in 10 Minutes)
+
+```kql
+customEvents
+| where name == "FundsTransferFailed"
+| summarize FailedAttempts = count()
+    by FromAccount = tostring(customDimensions.FromAccount),
+       bin(timestamp, 10m)
+| where FailedAttempts > 3
+| order by FailedAttempts desc
+```
+
+---
+
+### 7. Transaction Amount Distribution
+
+```kql
+customEvents
+| where name in (
+    "FundsTransferSuccess",
+    "FundsTransferFailed"
+)
+| extend Amount = todouble(customDimensions.Amount)
+| summarize
+    AvgAmount = round(avg(Amount), 2),
+    MaxAmount = max(Amount),
+    MinAmount = min(Amount)
+    by name
+```
+
+---
+
+### 8. Top Transfer Destinations
+
+```kql
+customEvents
+| where name == "FundsTransferSuccess"
+| summarize TransferCount = count()
+    by ToAccount = tostring(customDimensions.ToAccount)
+| order by TransferCount desc
+| take 10
+```
+
+---
+
+### 9. Top Source Accounts by Transfer Volume
+
+```kql
+customEvents
+| where name == "FundsTransferSuccess"
+| extend Amount = todouble(customDimensions.Amount)
+| summarize
+    TotalTransferred = sum(Amount),
+    TransactionCount = count()
+    by FromAccount = tostring(customDimensions.FromAccount)
+| order by TotalTransferred desc
+```
+
+---
+
+### 10. Transfer Activity Dashboard Query
+
+```kql
+customEvents
+| where name in (
+    "FundsTransferAttempt",
+    "FundsTransferSuccess",
+    "FundsTransferFailed"
+)
+| summarize TotalEvents = count() by name
+```
+
+These 10 queries provide a complete Application Insights monitoring dashboard covering transaction volume, success rates, failures, fraud detection, transfer amounts, and account activity.

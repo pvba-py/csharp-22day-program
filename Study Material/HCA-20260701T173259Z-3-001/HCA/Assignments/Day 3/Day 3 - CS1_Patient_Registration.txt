@@ -1,0 +1,74 @@
+# CASE STUDY 1: PATIENT REGISTRATION MODULE
+
+Concept Focus: Variables, Data Types, Methods, Objects, Properties, Exception Handling
+
+### Business Scenario
+A hospital needs a console-based application to digitize their patient registration process at the front desk. Currently, staff write details manually, leading to errors. The new system must accept patient details, validate them to prevent errors (like negative age), and print a standardized registration slip.
+
+### Learning Objectives
+- Understanding how to design a Class to represent real-world entities (Patient).
+- Implementing Exception Handling (try-catch) to prevent application crashes.
+- Using Properties to encapsulate data.
+- Writing Methods to organize code logically.
+
+### Task Requirements
+
+#### Part 1: Design the Patient Class
+Create a class named "Patient" with the following properties:
+- PatientID (string)
+- Name (string)
+- Age (int)
+- Gender (string)
+- PhoneNumber (string)
+- City (string)
+
+#### Part 2: Create Input Logic with Validation
+Write a method to read user input. You must implement the following validations:
+- Age Validation: Age must be a number greater than 0 and less than 120. If the user enters text or an invalid number, the program should catch the error and ask again.
+- Phone Number: Must be exactly 10 digits.
+- Name: Cannot be empty.
+
+Use "try-catch" blocks to handle format exceptions (e.g., if a user enters "twenty" instead of "20").
+
+#### Part 3: Display Registration Output
+Once valid data is collected, print a formatted Registration Slip to the console.
+
+### Expected Console Output
+
+```
+--------------------------------------------------
+       HOSPITAL PATIENT REGISTRATION SYSTEM
+--------------------------------------------------
+
+Enter Patient Name: Amit Sharma
+Enter Age: twenty
+Error: Please enter a valid numeric age.
+Enter Age: 25
+Enter Gender (Male/Female/Other): Male
+Enter Phone Number: 9876543210
+Enter City: Mumbai
+
+[Registration Complete]
+
+--------------------------------------------------
+            PATIENT REGISTRATION SLIP
+--------------------------------------------------
+Date: [Current System Date]
+
+Patient ID: PAT-2025-001
+Name:       Amit Sharma
+Age:        25 years
+Gender:     Male
+Contact:    9876543210
+Location:   Mumbai
+
+Instructions:
+Please proceed to the waiting area.
+--------------------------------------------------
+```
+
+### Technical Requirements
+- Use a separate class for "Patient".
+- Use a static method or a separate "RegistrationManager" class for the logic.
+- Ensure the application does not crash on invalid input.
+- Use "Console.ReadLine()" for inputs and "Console.WriteLine()" for outputs.
